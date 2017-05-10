@@ -34,16 +34,16 @@ ModuleVersion = '1.0'
 GUID = 'bd4390dc-a8ad-4bce-8d69-f53ccf8e4163'
 
 # Author of this module
-Author = 'Office of Information Technology: Computer Management Delivery'
+Author = 'Jeff Bolduan'
 
 # Company or vendor of this module
 CompanyName = 'University of Minnesota'
 
 # Copyright statement for this module
-#Copyright = ''
+Copyright = '(c) 2016 University of Minnesota. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+ Description = 'Window FileSystem functions'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
