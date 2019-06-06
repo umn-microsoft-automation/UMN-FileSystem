@@ -15,7 +15,7 @@
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ###
 
-function Set-ManagedByGroup {
+function Set-ManagedByADGroup {
     [CmdletBinding()]
     param(
         [string]$ADGroupName,
