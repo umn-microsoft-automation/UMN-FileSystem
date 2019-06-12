@@ -10,5 +10,30 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- powershell: .\Build\build.ps1
-  displayName: 'Run Build'
+- task: PowerShell@2
+  displayName: 'PowerShell Build Script'
+  inputs:
+    targetType: filePath
+    filePath: './.\Build\build.ps1'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results/TestResults_PS*.xml'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: 'Build/TestResults_PS*.xml'
+  condition: succeededOrFailed()
+
+- task: reportgenerator@4
+  displayName: ReportGenerator
+  inputs:
+    reports: 'Build/CodeCoverage_PS*.xml'
+    reporttypes: 'HtmlInline_AzurePipelines'
+    sourcedirs: .
+  condition: not(contains(variables['BHCommitMessage'],'!skipcodecoverage'))
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage from Build/CodeCoverage_PS*.xml'
+  inputs:
+    summaryFileLocation: 'Build/CodeCoverage_PS*.xml'
+    reportDirectory: coveragereport
+  condition: not(contains(variables['BHCommitMessage'],'!skipcodecoverage'))
