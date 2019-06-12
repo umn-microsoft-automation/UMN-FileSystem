@@ -4,7 +4,14 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+ branches:
+   include:
+     - '*' # Trigger builds on all branches
+
+pr:
+ branches:
+   include:
+     - master
 
 pool:
   vmImage: 'windows-latest'
