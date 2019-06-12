@@ -46,3 +46,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/windows,powershell,visualstudiocode
+
+# Build Files
+CodeCoverage*.xml
+TestResults*.xml
