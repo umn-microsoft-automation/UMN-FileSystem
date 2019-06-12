@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\..\UMN-FileSystem.psm1 -Force
+Import-Module (Join-Path $moduleRoot "$moduleName.psd1") -force
 
 Describe "New-SharedDirectory" {
     Mock New-ADGroup { return $true }
