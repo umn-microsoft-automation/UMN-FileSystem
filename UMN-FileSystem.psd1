@@ -64,7 +64,7 @@ Copyright = '(c) 2016 University of Minnesota. All rights reserved.'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @("NTFSSecurity","PSParallel","ActiveDirectory")
+RequiredModules = @("NTFSSecurity", "ActiveDirectory")
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
