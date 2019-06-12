@@ -5,6 +5,8 @@ param ($Task = 'Default')
 Install-Module Psake, PSDeploy, BuildHelpers, Pester -Force
 Import-Module Psake, BuildHelpers
 
+(Get-ChildItem).FullName | Write-Warning
+
 Set-BuildEnvironment
 
 Invoke-Psake -BuildFile .\Build\psake.ps1 -TaskList $Task -NoLogo
