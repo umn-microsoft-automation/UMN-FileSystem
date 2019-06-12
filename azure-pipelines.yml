@@ -21,7 +21,7 @@ steps:
   displayName: 'PowerShell Build Script'
   inputs:
     targetType: filePath
-    filePath: './.\Build\build.ps1'
+    filePath: 'Build\build.ps1'
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results/TestResults_PS*.xml'
