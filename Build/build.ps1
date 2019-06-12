@@ -5,7 +5,7 @@ param ($Task = 'Default')
 Install-Module Psake, PSDeploy, BuildHelpers, Pester -Force
 Import-Module Psake, BuildHelpers
 
-Set-BuildEnvironment -Force
+Set-BuildEnvironment
 
 Invoke-Psake -BuildFile .\Build\psake.ps1 -TaskList $Task -NoLogo
 
