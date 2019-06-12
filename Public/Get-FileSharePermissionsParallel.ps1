@@ -32,7 +32,7 @@ function Get-FileSharePermissionsParallel {
 	# Get the ACL for our root level path pulling all properties
 	$RootAccess = [array](Get-Access -Path $RootPath | Select-Object -Property *)
 
-	# We want each ace item to have a property 'IsInheritedDuplicate' that indicates if it is 
+	# We want each ace item to have a property 'IsInheritedDuplicate' that indicates if it is
 	# not-inherited is it a duplicate of an inherited ace. (indicater that it's unnecessary).
 	# Lastly we want the account attribute to be a simple string instaed of an identity reference.
 	foreach($RootAce in $RootAccess) {
