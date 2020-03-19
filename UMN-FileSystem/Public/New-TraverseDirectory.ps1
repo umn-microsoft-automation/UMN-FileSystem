@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Creates a directory and gives an active directory group traverse rights to it.
 
@@ -37,20 +37,21 @@ function New-TraverseDirectory {
         [ValidateNotNullOrEmpty()]
         [string]$Name,
 
-        [Parameter(Mandatory=$true,
-            HelpMessage="Name of the group to grant traverse rights to.")]
+        [Parameter(Mandatory = $true,
+            HelpMessage = "Name of the group to grant traverse rights to.")]
         [ValidateNotNullOrEmpty()]
         [Microsoft.ActiveDirectory.Management.ADGroup]$TraverseGroup,
 
-        [Parameter(Mandatory=$false,
-            HelpMessage="Domain name being worked on, by default will load the netbiosname of the Get-ADDomain command.")]
+        [Parameter(Mandatory = $false,
+            HelpMessage = "Domain name being worked on, by default will load the netbiosname of the Get-ADDomain command.")]
         [ValidateNotNullOrEmpty()]
         [string]$DomainName = (Get-ADDomain).NetBIOSName
     )
 
-    if(-not(Test-Path -Path "$Path\$Name")) {
+    if (-not(Test-Path -Path "$Path\$Name")) {
         New-Item -Path $Path -Name $Name -ItemType Directory
-    } else {
+    }
+    else {
         throw "Folder path already exists: $Path\$Name"
     }
 
@@ -60,7 +61,8 @@ function New-TraverseDirectory {
         $TraverseAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule $TraversePermission
         $ACL.SetAccessRule($TraverseAccessRule)
         [System.IO.DIrectory]::SetAccessControl("$Path\$Name", $ACL)
-    } catch {
+    }
+    catch {
         throw "Error granting access permissions."
     }
     

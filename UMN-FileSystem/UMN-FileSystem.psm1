@@ -1,4 +1,4 @@
-###
+﻿###
 # Copyright 2017 University of Minnesota, Office of Information Technology
 
 # This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,11 @@
 $Public = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -ErrorAction SilentlyContinue )
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction SilentlyContinue )
 
-foreach($Import in @($Public + $Private)) {
+foreach ($Import in @($Public + $Private)) {
 	try {
 		. $Import.FullName
-	} catch {
+	}
+ catch {
 		Write-Error -Message "Failed to import function $($Import.FullName): $_"
 	}
 }

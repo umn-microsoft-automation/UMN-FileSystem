@@ -1,4 +1,4 @@
-function Get-FileSharePermissionsParallel {
+﻿function Get-FileSharePermissionsParallel {
 	<#
 		.SYNOPSIS
 		Retrieves all the explicit folder share permissions based on a supplied root path using parallelism.
@@ -22,8 +22,8 @@ function Get-FileSharePermissionsParallel {
 	#>
 	[CmdletBinding()]
 	param (
-		[Parameter(Mandatory=$true)][string]$RootPath,
-		[Parameter(Mandatory=$false)][int]$Threads=50
+		[Parameter(Mandatory = $true)][string]$RootPath,
+		[Parameter(Mandatory = $false)][int]$Threads = 50
 	)
 
 	# Initialize an empty array to hold our report items
@@ -35,7 +35,7 @@ function Get-FileSharePermissionsParallel {
 	# We want each ace item to have a property 'IsInheritedDuplicate' that indicates if it is
 	# not-inherited is it a duplicate of an inherited ace. (indicater that it's unnecessary).
 	# Lastly we want the account attribute to be a simple string instaed of an identity reference.
-	foreach($RootAce in $RootAccess) {
+	foreach ($RootAce in $RootAccess) {
 		Add-Member -InputObject $RootAce -MemberType NoteProperty -Name "IsInheritedDuplicate" -Value "root"
 		Add-Member -InputObject $RootAce -MemberType NoteProperty -Name "Account" -Value $RootAce.Account.AccountName -Force
 		$Report += $RootAce
@@ -57,7 +57,7 @@ function Get-FileSharePermissionsParallel {
 			$FolderAccess = [array](Get-Access -Path $_ | Select-Object -Property *)
 
 			# Again we want the account attribute to be a simple string (works better for the Compare-Object cmdlet).
-			foreach($FolderACE in $FolderAccess) {
+			foreach ($FolderACE in $FolderAccess) {
 				Add-Member -InputObject $FolderACE -MemberType NoteProperty -Name "Account" -Value $FolderACE.Account.AccountName -Force
 			}
 
@@ -68,12 +68,12 @@ function Get-FileSharePermissionsParallel {
 			$NonInheritedFolderAccess = [array]($FolderAccess | Where-Object -FilterScript { $_.IsInherited -ne $true })
 
 			# Process each non-inherited ace
-			foreach($ace in $NonInheritedFolderAccess) {
+			foreach ($ace in $NonInheritedFolderAccess) {
 			
 				# Create an empty array to store using an array so we can use a simple count comparison for the IsInheritedDuplicateValue check
 				$CompareResults = @()
 
-				if($InheritedFolderAccess) {
+				if ($InheritedFolderAccess) {
 					# Compare our ace against inherited aces based on the choosen ace properties. Only show objects that are identical
 					$CompareResults = [array](Compare-Object -ReferenceObject $ace -DifferenceObject $InheritedFolderAccess -Property $AceCompareProperties -ExcludeDifferent -IncludeEqual)
 				}
@@ -89,7 +89,8 @@ function Get-FileSharePermissionsParallel {
 			}
 
 			Write-Output $ParallelOutput
-		} catch {
+		}
+		catch {
 			Write-Warning -Message "$($_.Exception.Message) : $($_.Exception.ItemName)"
 		}
 	}
