@@ -123,9 +123,16 @@ Task Build -Depends Test {
     }
 
     Write-Warning -Message "BuildDir = $BuildDir"
-    Write-Warning -Message "$(Test-Path -Path $BuildDir)"
-    Register-PSRepository -Name "LocalPSRepo" -SourceLocation "$BuildDir" -PublishLocation "$BuildDir" -InstallationPolicy Trusted
-    nuget.exe sources Add -Name "LocalPSRepo" -Source "$BuildDir"
+    
+    if (-not (Test-Path -Path "$BuildDir")) {
+        New-Item -Path "$BuildDir" -ItemType Directory -Force
+    }
+
+    if(Get-Command -Name "Register-PSRepository" -ErrorAction SilentlyContinue) {
+        Register-PSRepository -Name "LocalPSRepo" -SourceLocation "$BuildDir" -PublishLocation "$BuildDir" -InstallationPolicy Trusted
+    } else {
+        nuget.exe sources Add -Name "LocalPSRepo" -Source "$BuildDir"
+    }
 
     try {
         [System.Version]$GalleryVersion = Get-NextNugetPackageVersion -Name $env:BHProjectName -ErrorAction Stop
@@ -171,10 +178,6 @@ Task Build -Depends Test {
     Write-Warning -Message "NewVersion = $($NewVersion.ToString())"
 
     Update-Metadata -Path $env:BHPSModuleManifest -PropertyName "ModuleVersion" -Value $NewVersion -ErrorAction Stop
-
-    if (-not (Test-Path -Path "$BuildDir")) {
-        New-Item -Path "$BuildDir" -ItemType Directory -Force
-    }
 
     Publish-Module -Path $env:BHModulePath -Repository "LocalPSRepo" -NuGetApiKey "AzureDevOps" -Force -Verbose
 
