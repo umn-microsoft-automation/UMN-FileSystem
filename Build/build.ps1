@@ -1,14 +1,20 @@
-param ($Task = 'Default')
+﻿param ($task = "Default")
 
-# Grab nuget bits, install modules, set build variables, start build.
+# Grab nuget buits, install modules, set build variables, start build.
 
-Install-Module Psake, PSDeploy, BuildHelpers, Pester -Force
-Import-Module Psake, BuildHelpers
+# Make sure package provider is installed (required for Docker support)
+Install-PackageProvider -Name "NuGet" -MinimumVersion "2.8.5.201" -Force
 
+# Pester is already installed, need to skip this check.
+Install-Module -Name "Pester" -Force -SkipPublisherCheck
+
+Install-Module -Name "Psake", "PSDeploy", "BuildHelpers" -Force
+Import-Module "Psake", "BuildHelpers" -Force
+
+# Write out directory files.
 (Get-ChildItem).FullName | Write-Warning
 
 Set-BuildEnvironment
+Invoke-Psake -buildFile .\Build\psake.ps1 -taskList $task -nologo
 
-Invoke-Psake -BuildFile .\Build\psake.ps1 -TaskList $Task -NoLogo
-
-exit ([int]( -not $psake.build_success))
+exit([int](-not $psake.build_success))
