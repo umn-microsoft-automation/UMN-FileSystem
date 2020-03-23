@@ -1,4 +1,9 @@
-﻿$MockACETraverse = @{
+﻿function Get-ADGroup {
+    return @{
+        "SamAccountName" = "FakeGroup"
+    }
+}
+$MockACETraverse = @{
     "IdentityReference" = "TraverseUser"
     "FileSystemRights" = [System.Security.AccessControl.FileSystemRights]"ReadAndExecute,Synchronize"
 	"InheritanceFlags" = [System.Security.AccessControl.InheritanceFlags]::None
@@ -63,4 +68,12 @@ $ReadOnlyACL = @{
 
 $SharePermsACL = @{
     "Access" = @($MockACEModify, $MockACEDenyDelete, $MockACERead)
+}
+
+$FakeADTraverseGroupWithDomain = @{
+    "SamAccountName" = "domain\FakeADGroup"
+}
+
+$FakeLocalTraverseGroupWithoutDomain = @{
+    "SamAccountName" = "FakeLocalGroup"
 }

@@ -1,14 +1,14 @@
-﻿function Find-TraverseGroups {
-	<#
-		.SYNOPSIS
-			Takes a path and returns the traverse groups on the folder.
-		.DESCRIPTION
-			Returns an array of ADGroups objects that have traverse rights to the path given.
-		.EXAMPLE
-			Find-TraverseGroups -Path \\foo.bar\test
-		.PARAMETER Path
-			The full path to the folder you would like to get traverse folders for.
-	#>
+﻿<#
+	.SYNOPSIS
+		Takes a path and returns the traverse groups on the folder.
+	.DESCRIPTION
+		Returns an array of ADGroups objects that have traverse rights to the path given.
+	.EXAMPLE
+		Find-TraverseGroups -Path \\foo.bar\test
+	.PARAMETER Path
+		The full path to the folder you would like to get traverse folders for.
+#>
+function Find-TraverseGroups {
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $true)][string]$Path
@@ -50,14 +50,20 @@
 
 	# Loop through the paths and determine which contain a traverse group
 	foreach ($item in $Paths) {
+		Write-Verbose -Message "Working on $item"
 		$itemacl = Get-Acl -Path $item
 
 		foreach ($acl in $itemacl.Access) {
 			# Check the acl for the traverse permissions defined earlier
 			if (($acl.InheritanceFlags -eq $travInheritanceFlag) -and ($acl.PropagationFlags -eq $travPropagationFlag) -and ($acl.FileSystemRights -eq $travRights) -and ($acl.AccessControlType -eq $travType) -and ($acl.IsInherited -eq $false)) {
-				
+				Write-Verbose -Message "Found traverse group $($acl.IdentityReference)"
 				# We've now found a traverse group
-				$SamAccountName = $acl.IdentityReference.ToString().Split("\")[1]
+				if ($acl.IdentityReference.ToString().Contains('\')) {
+					$SamAccountName = $acl.IdentityReference.ToString().Split("\")[1]
+				}
+				else {
+					$SamAccountName = $acl.IdentityReference.ToString()
+				}
 
 				# Make sure the account name isn't null, then get the group make sure it exists in AD then add the path to the group output object.
 				if ($null -ne $SamAccountName) {
