@@ -25,12 +25,11 @@
 	$ACL = Get-Acl -Path $Path
 	foreach ($ACE in $ACL.Access) {
 		# Check the ACE for the traverse permissions defined earlier
-		
 
 		if (($ACE.InheritanceFlags -eq $TraverseInheritanceFlag) -and ($ACE.PropagationFlags -eq $TraversePropagationFlag) -and ($ACE.FileSystemRights -eq $TraverseRights) -and ($ACE.AccessControlType -eq $TraverseAccessControlType) -and ($ACE.IsInherited -eq $false)) {
 			Write-Verbose -Message "Found traverse group on $($FolderName): $($ACE.IdentityReference)"
 			if ($TraverseGroupFound) {
-				Write-Error -Message "Multiple traverse groups found on $FolderName" -ErrorAction Inquire
+				Write-Error -Message "Multiple traverse groups found on $FolderName" -ErrorAction Stop
 			}
 			else {
 				$TraverseGroupFound = $true
@@ -40,9 +39,11 @@
 	}
 
 	if ($TraverseGroupFound) {
+		Write-Verbose -Message "Returning $TraverseGroupName"
 		return $TraverseGroupName
 	}
- else {
+	else {
+		Write-Verbose -Message "Did not find a traverse group."
 		return $null
 	}
 }
